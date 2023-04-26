@@ -46,14 +46,14 @@ select *,to_date(order_date, 'mm-dd-yyyy')from  CJ_Sales_Data_Final_copy,
 
 -------------------------------------------------------------------------------------------------------------------------
 select *, substring(Order_id,9) as order_extract from CJ_Sales_Data_Final_copy --Create a new column called order_extract and extract the number after the last
---‘–‘from Order ID column.
+--â€˜â€“â€˜from Order ID column.
 --------------------------------------------------------------------------------------------------------------------------
 select *,
 case when discount > 0 then 'Yes'
 else 'No'
 end as Discount_Flag
 from CJ_Sales_Data_Final_copy  -- Create a new column called Discount Flag and categorize it based on discount.
---Use ‘Yes’ if the discount is greater than zero else ‘No’.
+--Use â€˜Yesâ€™ if the discount is greater than zero else â€˜Noâ€™.
 ---------------------------------------------------------------------------------------------------------------------------
 --Create a new column called process days and calculate how many days it takes
 --for each order id to process from the order to its shipment.
