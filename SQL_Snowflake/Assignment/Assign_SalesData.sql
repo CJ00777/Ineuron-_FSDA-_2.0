@@ -1,0 +1,77 @@
+use database practice;
+create or replace table CJ_Sales_Data_Final
+(
+order_id varchar (20),
+order_date varchar (10),
+ship_date varchar (10),
+ship_mode varchar (30),
+customer_name varchar (50),
+segment varchar (50),
+state varchar (90),
+country varchar (100),
+market varchar (20),
+region varchar (30),
+product_id varchar (20),
+category varchar (30),
+sub_category varchar (20),
+product_name varchar (190),
+sales number (10),
+quantity number(3),
+discount number (5,3),
+profit number (8,2),
+shipping_cost number (5,2),
+order_priority varchar (10),
+year number (5)
+);
+
+select * from CJ_Sales_Data_Final
+
+create table CJ_Sales_Data_Final_copy as select *  from CJ_Sales_Data_Final
+
+select * from CJ_Sales_Data_Final_copy
+describe table CJ_Sales_Data_Final_copy
+-------------------------------------------------------------------------------------------------------------------------
+Alter table CJ_Sales_Data_Final_copy
+Add primary key (PRODUCT_ID)
+
+Alter table CJ_Sales_Data_Final_copy
+Drop Primary key
+
+Alter table CJ_Sales_Data_Final_copy
+Add primary key (Order_ID)
+-------------------------------------------------------------------------------------------------------------------------
+create or replace view CD_SALES as
+select *,to_date(order_date, 'mm-dd-yyyy')from  CJ_Sales_Data_Final_copy,
+         to_date(ship_date, 'mm-dd-yyyy')from  CJ_Sales_Data_Final_copy
+
+-------------------------------------------------------------------------------------------------------------------------
+select *, substring(Order_id,9) as order_extract from CJ_Sales_Data_Final_copy --Create a new column called order_extract and extract the number after the last
+--‘–‘from Order ID column.
+--------------------------------------------------------------------------------------------------------------------------
+select *,
+case when discount > 0 then 'Yes'
+else 'No'
+end as Discount_Flag
+from CJ_Sales_Data_Final_copy  -- Create a new column called Discount Flag and categorize it based on discount.
+--Use ‘Yes’ if the discount is greater than zero else ‘No’.
+---------------------------------------------------------------------------------------------------------------------------
+--Create a new column called process days and calculate how many days it takes
+--for each order id to process from the order to its shipment.
+
+select *,
+datediff ('day',to_date(order_date, 'mm-dd-yyyy'),to_date(ship_date, 'mm-dd-yyyy')) as Process_date
+from CJ_Sales_Data_Final_copy
+------------------------------------------------------------------------------------------------------------------------------
+
+create or replace view CJ_Sales_Data_Final_copy_new as
+select *,datediff ('day',to_date(order_date, 'mm-dd-yyyy'),to_date(ship_date, 'mm-dd-yyyy')) as Process_date,
+case when process_date <= 3 then 5
+     when process_date > 3 and process_date <= 6 then 4
+     when process_date > 6 and process_date <= 10 then 3
+     when process_date >10 then 2
+end as Rating
+from CJ_Sales_Data_Final_copy
+
+select *,from CJ_Sales_Data_Final_copy_new
+describe view CJ_Sales_Data_Final_copy_new
+-----------------------------------------------------------------------------------------------------------------------------
